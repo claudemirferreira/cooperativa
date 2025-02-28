@@ -1,7 +1,9 @@
-package com.siscred.cooperativa.infrastructure.persistence.entity;
+package com.siscred.cooperativa.domain;
 
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,22 +15,11 @@ import java.time.OffsetDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class SessaoVotacao {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sessao_votacao_id")
+public class SessaoDomain {
     private Long id;
-
     private OffsetDateTime inicio;
-
     private OffsetDateTime fim;
-
-    @ManyToOne
-    @JoinColumn(name = "pauta_id", nullable = false)
-    private Pauta pauta;
-
+    private PautaDomain pauta;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private StatusEnum status;

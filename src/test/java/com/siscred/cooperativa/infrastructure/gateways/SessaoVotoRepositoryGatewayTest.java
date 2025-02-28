@@ -1,11 +1,11 @@
 package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.domain.PautaDomain;
-import com.siscred.cooperativa.domain.SessaoVotacaoDomain;
+import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
-import com.siscred.cooperativa.infrastructure.persistence.entity.SessaoVotacao;
-import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoVotacaoRepository;
+import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
+import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,25 +18,25 @@ import java.time.OffsetDateTime;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SessaoVotacaoRepositoryGatewayTest {
+class SessaoVotoRepositoryGatewayTest {
 
     @Mock
-    private SessaoVotacaoRepository sessaoVotacaoRepository;
+    private SessaoRepository sessaoRepository;
 
     @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private SessaoVotacaoRepositoryGateway gateway;
+    private SessaoRepositoryGateway gateway;
 
-    private SessaoVotacaoDomain sessaoVotacaoDomain;
-    private SessaoVotacao sessaoVotacaoEntity;
+    private SessaoDomain sessaoDomain;
+    private Sessao sessaoVotacaoEntity;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        sessaoVotacaoDomain = SessaoVotacaoDomain
+        sessaoDomain = SessaoDomain
                 .builder()
                 .status(StatusEnum.ABERTO)
                 .inicio(OffsetDateTime.now())
@@ -44,7 +44,7 @@ class SessaoVotacaoRepositoryGatewayTest {
                 .pauta(PautaDomain.builder().id(1L).build())
                 .build();
 
-        sessaoVotacaoEntity = SessaoVotacao
+        sessaoVotacaoEntity = Sessao
                 .builder()
                 .pauta(Pauta.builder().id(1L).build())
                 .inicio(OffsetDateTime.now())
@@ -52,20 +52,20 @@ class SessaoVotacaoRepositoryGatewayTest {
                 .status(StatusEnum.ABERTO)
                 .build();
 
-        when(modelMapper.map(sessaoVotacaoDomain, SessaoVotacao.class)).thenReturn(sessaoVotacaoEntity);
-        when(modelMapper.map(sessaoVotacaoEntity, SessaoVotacaoDomain.class)).thenReturn(sessaoVotacaoDomain);
+        when(modelMapper.map(sessaoDomain, Sessao.class)).thenReturn(sessaoVotacaoEntity);
+        when(modelMapper.map(sessaoVotacaoEntity, SessaoDomain.class)).thenReturn(sessaoDomain);
     }
 
     @Test
     void testCreate() {
-        SessaoVotacaoDomain result = gateway.create(sessaoVotacaoDomain);
+        SessaoDomain result = gateway.create(sessaoDomain);
 
-        verify(sessaoVotacaoRepository, times(1)).save(sessaoVotacaoEntity);
+        verify(sessaoRepository, times(1)).save(sessaoVotacaoEntity);
 
         assertNotNull(result);
-        assertEquals(sessaoVotacaoDomain, result);
+        assertEquals(sessaoDomain, result);
 
-        verify(modelMapper, times(1)).map(sessaoVotacaoDomain, SessaoVotacao.class);
-        verify(modelMapper, times(1)).map(sessaoVotacaoEntity, SessaoVotacaoDomain.class);
+        verify(modelMapper, times(1)).map(sessaoDomain, Sessao.class);
+        verify(modelMapper, times(1)).map(sessaoVotacaoEntity, SessaoDomain.class);
     }
 }

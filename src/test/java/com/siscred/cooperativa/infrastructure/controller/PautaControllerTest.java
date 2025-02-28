@@ -39,7 +39,7 @@ class PautaControllerTest {
         when(createPautaUsecase.execute(any(PautaDomain.class))).thenReturn(createdPauta);
         
         // Act
-        ResponseEntity<PautaResponse> response = pautaController.createCard(request);
+        ResponseEntity<PautaResponse> response = pautaController.create(request);
         
         // Assert
         assertNotNull(response);

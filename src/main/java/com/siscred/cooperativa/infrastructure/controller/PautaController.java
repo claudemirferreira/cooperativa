@@ -28,7 +28,7 @@ public class PautaController {
             <h3>Retorna a pauta criada.</h3>
             """)
     @PostMapping
-    public ResponseEntity<PautaResponse> createCard(@Valid @RequestBody final PautaRequest request) {
+    public ResponseEntity<PautaResponse> create(@Valid @RequestBody final PautaRequest request) {
         final var newPauta = createPautaUsecase.execute(PautaDomain.builder().nome(request.getNome()).build());
         return ResponseEntity.created(URI.create("/pauta/" + newPauta.getId())).body(
                 PautaResponse.builder().id(newPauta.getId()).nome(newPauta.getNome()).build());

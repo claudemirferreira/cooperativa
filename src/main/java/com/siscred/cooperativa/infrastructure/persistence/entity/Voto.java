@@ -1,30 +1,33 @@
 package com.siscred.cooperativa.infrastructure.persistence.entity;
 
+import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Pauta {
+public class Voto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pauta_id")
+    @Column(name = "voto_id")
     private Long id;
 
-    @Column(length = 100, nullable = false, unique = true)
-    private String nome;
+    @ManyToOne
+    @JoinColumn(name = "sessao_id", nullable = false)
+    private Sessao sessao;
 
-    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sessao> sessaoVotacoes;
+    @Column(length = 11)
+    private String cpf;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 3)
+    private VotoEnum voto;
 
 }
