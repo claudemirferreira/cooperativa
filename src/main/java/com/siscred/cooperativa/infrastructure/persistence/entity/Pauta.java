@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,9 +16,15 @@ import lombok.NoArgsConstructor;
 public class Pauta {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pauta_id")
     private Long id;
 
     @Column(length = 100, nullable = false, unique = true)
     private String nome;
+
+    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SessaoVotacao> sessaoVotacoes;
+
+
 }
