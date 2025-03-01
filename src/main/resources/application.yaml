@@ -31,6 +31,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
+  scheduler:
+    cron:
+      vote-task: "0 0/1 * * * ?"
 
 server:
   port: 8080
