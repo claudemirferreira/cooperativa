@@ -1,7 +1,6 @@
 package com.siscred.cooperativa.infrastructure.controller;
 
 import com.siscred.cooperativa.application.usecases.CreateVotoUsecase;
-import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.exception.CpfInvalidException;
 import com.siscred.cooperativa.infrastructure.controller.dto.request.CreateVotoRequest;
 import com.siscred.cooperativa.infrastructure.controller.dto.response.CreateVotoResponse;
@@ -30,7 +29,7 @@ public class VotoController {
             """)
     @PostMapping
     public ResponseEntity<CreateVotoResponse> create(@Valid @RequestBody final CreateVotoRequest request) throws CpfInvalidException {
-        final var domain = createVotoUsecase.execute(request.getCpf(), request.getSessaoId(), request.getVoto());
+        final var domain = createVotoUsecase.execute(request.cpf(), request.sessaoId(), request.voto());
         return ResponseEntity.created(URI.create("/voto/" + domain.getCpf())).body(
                 CreateVotoResponse
                         .builder()

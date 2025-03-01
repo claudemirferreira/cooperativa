@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CpfInvalidException.class)
     public ResponseEntity<String> handleCpfInvalidException(CpfInvalidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"" + ex.getMessage() + "\"}");
     }
 
     @ExceptionHandler(ExistVotoCPFException.class)

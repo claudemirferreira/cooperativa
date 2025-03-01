@@ -1,17 +1,10 @@
 package com.siscred.cooperativa.infrastructure.controller.dto.request;
 
 import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class CreateVotoRequest {
-    private String cpf;
-    private Long sessaoId;
-    private VotoEnum voto;
+public record CreateVotoRequest(
+        @NotNull(message = "cpf é obrigatório") String cpf,
+        @NotNull(message = "sessaoId é obrigatório") Long sessaoId,
+        @NotNull(message = "voto é obrigatório") VotoEnum voto) {
 }

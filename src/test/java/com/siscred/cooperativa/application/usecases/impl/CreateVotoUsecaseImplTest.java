@@ -1,6 +1,7 @@
 package com.siscred.cooperativa.application.usecases.impl;
 
 import com.siscred.cooperativa.application.gateways.VotoGateway;
+import com.siscred.cooperativa.application.gateways.VotoMensageriaGateway;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.exception.ExistVotoCPFException;
@@ -9,86 +10,85 @@ import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+import static org.junit.jupiter.api.Assertions.*;
+
 class CreateVotoUsecaseImplTest {
 
     @Mock
     private VotoGateway votoGateway;
 
+    @Mock
+    private VotoMensageriaGateway votoMensageriaGateway;
+
     @InjectMocks
     private CreateVotoUsecaseImpl createVotoUsecase;
 
-    private String validCpf;
-    private Long sessaoId;
-    private VotoEnum voto;
     private VotoDomain votoDomain;
-    private Voto votoEntity;
+    private Voto voto;
 
     @BeforeEach
     void setUp() {
-        validCpf = "60735090220";
-        sessaoId = 10L;
-        voto = VotoEnum.SIM;
-
+        MockitoAnnotations.openMocks(this);
         votoDomain = VotoDomain.builder()
-                .sessao(SessaoDomain.builder().id(sessaoId).build())
-                .cpf(validCpf)
-                .voto(voto)
+                .cpf("52998224725")
+                .sessao(SessaoDomain.builder().id(1L).build())
+                .voto(VotoEnum.SIM)
                 .build();
-
-        votoEntity = Voto.builder()
-                .sessao(Sessao.builder().id(sessaoId).build())
-                .cpf(validCpf)
-                .voto(voto)
+        voto = Voto.builder()
+                .cpf("52998224725")
+                .sessao(Sessao.builder().id(1L).build())
+                .voto(VotoEnum.SIM)
                 .build();
     }
 
     @Test
-    void shouldCreateVotoSuccessfully() {
-        // Arrange
-        when(votoGateway.findBySessaoIdAndCpf(sessaoId, validCpf)).thenReturn(Collections.emptyList());
-        when(votoGateway.create(any(VotoDomain.class))).thenReturn(votoDomain);
+    void shouldRegisterVoteSuccessfully() {
+        // Simulando comportamento do gateway para não retornar votos existentes
+        when(votoGateway.findBySessaoIdAndCpf(any(Long.class), any(String.class))).thenReturn(java.util.Collections.emptyList());
 
-        // Act
-        VotoDomain result = createVotoUsecase.execute(validCpf, sessaoId, voto);
+        // Chamando o método
+        VotoDomain result = createVotoUsecase.execute(votoDomain.getCpf(), votoDomain.getSessao().getId(), votoDomain.getVoto());
 
-        // Assert
+        // Verificando se o voto foi registrado corretamente
         assertNotNull(result);
-        assertEquals(validCpf, result.getCpf());
-        assertEquals(sessaoId, result.getSessao().getId());
-        assertEquals(voto, result.getVoto());
+        assertEquals(votoDomain.getCpf(), result.getCpf());
+        assertEquals(votoDomain.getSessao().getId(), result.getSessao().getId());
+        assertEquals(votoDomain.getVoto(), result.getVoto());
 
-        // Verify
-        verify(votoGateway, times(1)).findBySessaoIdAndCpf(sessaoId, validCpf);
-        verify(votoGateway, times(1)).create(any(VotoDomain.class));
+        // Verificando se o método 'send' foi chamado
+        verify(votoMensageriaGateway, times(1)).send(any(VotoDomain.class));
     }
 
     @Test
-    void shouldThrowExceptionWhenVotoAlreadyExists() {
-        // Arrange
-        when(votoGateway.findBySessaoIdAndCpf(sessaoId, validCpf)).thenReturn(Collections.<Voto>singletonList(votoEntity));
+    void shouldThrowExceptionWhenVoteAlreadyExists() {
+        // Simulando que já existe um voto para o CPF informado
+        when(votoGateway.findBySessaoIdAndCpf(any(Long.class), any(String.class)))
+                .thenReturn(java.util.Collections.singletonList(voto));
 
-        // Act & Assert
-        ExistVotoCPFException exception = assertThrows(
-                ExistVotoCPFException.class,
-                () -> createVotoUsecase.execute(validCpf, sessaoId, voto)
-        );
+        // Chamando o método e verificando se a exceção é lançada
+        ExistVotoCPFException exception = assertThrows(ExistVotoCPFException.class, () -> {
+            createVotoUsecase.execute(votoDomain.getCpf(), votoDomain.getSessao().getId(), votoDomain.getVoto());
+        });
 
+        // Verificando a mensagem da exceção
         assertEquals("Já existe um voto para o CPF informado.", exception.getMessage());
+    }
 
-        // Verify
-        verify(votoGateway, times(1)).findBySessaoIdAndCpf(sessaoId, validCpf);
-        verify(votoGateway, never()).create(any(VotoDomain.class));
+    @Test
+    void shouldValidateCPFBeforeRegisteringVote() {
+        // CPF inválido
+        String invalidCpf = "00000000000";
+
+        // Verificando se a exceção é lançada ao tentar validar um CPF inválido
+        assertThrows(com.siscred.cooperativa.exception.CpfInvalidException.class, () -> {
+            createVotoUsecase.execute(invalidCpf, votoDomain.getSessao().getId(), votoDomain.getVoto());
+        });
     }
 }

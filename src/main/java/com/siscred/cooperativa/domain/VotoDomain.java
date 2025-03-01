@@ -27,18 +27,14 @@ public class VotoDomain {
         if (sanitizedCpf.length() != 11) {
             throw new CpfInvalidException("Invalid CPF: incorrect length");
         }
-
-        // Lista de CPFs inválidos com números repetidos
         Set<String> invalidCpfs = Set.of(
             "00000000000", "11111111111", "22222222222", "33333333333",
             "44444444444", "55555555555", "66666666666", "77777777777",
             "88888888888", "99999999999"
         );
-
         if (invalidCpfs.contains(sanitizedCpf)) {
             throw new CpfInvalidException("Invalid CPF: repetitive numbers");
         }
-
         if (!isValidCpfDigits(sanitizedCpf)) {
             throw new CpfInvalidException("Invalid CPF: incorrect verification digits");
         }

@@ -1,71 +1,66 @@
 package com.siscred.cooperativa.infrastructure.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siscred.cooperativa.application.usecases.CreateVotoUsecase;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
-import com.siscred.cooperativa.exception.CpfInvalidException;
-import com.siscred.cooperativa.infrastructure.controller.dto.request.CreateVotoRequest;
 import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
 class VotoControllerTest {
-
-    private MockMvc mockMvc;
-
-    @Mock
-    private CreateVotoUsecase createVotoUsecase;
 
     @InjectMocks
     private VotoController votoController;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Mock
+    private CreateVotoUsecase createVotoUsecase;
 
-    private CreateVotoRequest request;
-    private VotoDomain votoDomain;
+    private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(votoController).build();
+        MockitoAnnotations.openMocks(this);
+        mockMvc = org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup(votoController).build();
 
-        request = new CreateVotoRequest("60735090220", 10L, VotoEnum.SIM);
-
-        votoDomain = VotoDomain.builder()
-                .cpf("60735090220")
-                .sessao(SessaoDomain.builder().id(10L).build())
-                .voto(VotoEnum.SIM)
-                .build();
     }
 
     @Test
-    void shouldCreateVotoSuccessfully() throws Exception {
+    void create_shouldReturnCreatedVotoResponse() throws Exception {
         // Arrange
-        when(createVotoUsecase.execute(request.getCpf(), request.getSessaoId(), request.getVoto()))
-                .thenReturn(votoDomain);
+        String cpf = "12345678900";
+        Long sessaoId = 1L;
+        VotoEnum voto = VotoEnum.SIM;
+
+        VotoDomain votoDomain = VotoDomain.builder()
+                .voto(VotoEnum.SIM)
+                .sessao(SessaoDomain.builder().id(1L).build())
+                .id(12345678900L)
+                .cpf("12345678900")
+                .build();
+        // Mock o comportamento do caso de uso
+        when(createVotoUsecase.execute(cpf, sessaoId, voto)).thenReturn(votoDomain);
 
         // Act & Assert
         mockMvc.perform(post("/voto")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content("{\"cpf\": \"12345678900\", \"sessaoId\": 1, \"voto\": \"SIM\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/voto/60735090220"))
-                .andExpect(jsonPath("$.cpf").value("60735090220"))
-                .andExpect(jsonPath("$.sessaoId").value(10))
-                .andExpect(jsonPath("$.voto").value("SIM"));
+                .andExpect(header().string("Location", "/voto/12345678900"))
+                .andExpect(jsonPath("$.cpf").value(cpf))
+                .andExpect(jsonPath("$.voto").value(voto.toString()))
+                .andExpect(jsonPath("$.sessaoId").value(sessaoId));
+
+        // Verificar se o método execute foi chamado
+        verify(createVotoUsecase, times(1)).execute(cpf, sessaoId, voto);
     }
 
 }

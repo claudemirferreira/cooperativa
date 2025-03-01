@@ -1,6 +1,7 @@
 package com.siscred.cooperativa.application.usecases.impl;
 
 import com.siscred.cooperativa.application.gateways.VotoGateway;
+import com.siscred.cooperativa.application.gateways.VotoMensageriaGateway;
 import com.siscred.cooperativa.application.usecases.CreateVotoUsecase;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
@@ -12,19 +13,20 @@ import org.springframework.stereotype.Service;
 public class CreateVotoUsecaseImpl implements CreateVotoUsecase {
 
     private final VotoGateway votoGateway;
+    private final VotoMensageriaGateway votoMensageriaGateway;
 
-    public CreateVotoUsecaseImpl(VotoGateway votoGateway) {
+    public CreateVotoUsecaseImpl(VotoGateway votoGateway, VotoMensageriaGateway votoMensageriaGateway) {
         this.votoGateway = votoGateway;
+        this.votoMensageriaGateway = votoMensageriaGateway;
     }
 
     @Override
     public VotoDomain execute(String cpf, Long sessaoId, VotoEnum voto) {
         VotoDomain votoDomain = buildVotoDomain(cpf, sessaoId, voto);
-
         votoDomain.validateCPF();
         ensureVotoDoesNotExist(sessaoId, cpf);
-
-        return votoGateway.create(votoDomain);
+        votoMensageriaGateway.send(votoDomain);
+        return votoDomain;
     }
 
     private VotoDomain buildVotoDomain(String cpf, Long sessaoId, VotoEnum voto) {
