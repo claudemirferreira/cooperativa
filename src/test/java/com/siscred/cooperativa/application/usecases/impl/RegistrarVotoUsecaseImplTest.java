@@ -36,8 +36,9 @@ class RegistrarVotoUsecaseImplTest {
         votoDomain = VotoDomain.builder()
                 .id(1L)
                 .cpf("52998224725")
+                .sessao(sessaoDomain) // A Sessao não será mais nula
+                .voto(VotoEnum.SIM) // ou outro valor de VotoEnum conforme a lógica do teste
                 .build();
-
     }
 
     @Test
@@ -45,14 +46,6 @@ class RegistrarVotoUsecaseImplTest {
         // Criando e inicializando a SessaoDomain para evitar o null pointer
         SessaoDomain sessaoDomain = new SessaoDomain();
         sessaoDomain.setId(1L); // Certificando-se de que a Sessao não é nula
-
-        // Criando o VotoDomain com a Sessao inicializada
-        votoDomain = VotoDomain.builder()
-                .id(1L)
-                .cpf("52998224725")
-                .sessao(sessaoDomain) // A Sessao não será mais nula
-                .voto(VotoEnum.SIM) // ou outro valor de VotoEnum conforme a lógica do teste
-                .build();
 
         // Simulando o comportamento esperado para o gateway
         when(votoGateway.create(any(VotoDomain.class))).thenReturn(votoDomain);
@@ -74,14 +67,7 @@ class RegistrarVotoUsecaseImplTest {
         SessaoDomain sessaoDomain = new SessaoDomain();
         sessaoDomain.setId(1L); // Certificando-se de que a Sessao não é nula
 
-        VotoDomain votoDomain = VotoDomain.builder()
-                .id(1L)
-                .cpf("52998224725")
-                .sessao(sessaoDomain) // A Sessao não será mais nula
-                .voto(VotoEnum.SIM) // ou outro valor de VotoEnum conforme a lógica do teste
-                .build();
-
-        // Simulando o comportamento do gateway com CPF já existente
+       // Simulando o comportamento do gateway com CPF já existente
         when(votoGateway.findBySessaoIdAndCpf(1L, "52998224725")).thenReturn(List.of(votoDomain));
 
         // Esperando que a exceção seja lançada
@@ -99,13 +85,6 @@ class RegistrarVotoUsecaseImplTest {
         // Criando o VotoDomain
         SessaoDomain sessaoDomain = new SessaoDomain();
         sessaoDomain.setId(1L); // Certificando-se de que a Sessao não é nula
-
-        VotoDomain votoDomain = VotoDomain.builder()
-                .id(1L)
-                .cpf("52998224725")
-                .sessao(sessaoDomain)
-                .voto(VotoEnum.SIM)
-                .build();
 
         // Configurando o mock do votoGateway para lançar a RuntimeException simulando um erro de banco de dados
         when(votoGateway.create(any(VotoDomain.class))).thenThrow(new RuntimeException("Database error"));

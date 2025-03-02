@@ -43,7 +43,7 @@ class PautaControllerTest {
         
         // Assert
         assertNotNull(response);
-        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(201, response.getStatusCode().value());
         assertNotNull(response.getBody());
         assertEquals(1L, response.getBody().getId());
         assertEquals("Nova Pauta", response.getBody().getNome());

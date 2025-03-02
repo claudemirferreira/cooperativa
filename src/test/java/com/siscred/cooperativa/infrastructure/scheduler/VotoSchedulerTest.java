@@ -1,7 +1,6 @@
 package com.siscred.cooperativa.infrastructure.scheduler;
 
 import com.siscred.cooperativa.application.usecases.ContabilizarVotoUsecase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,10 +18,6 @@ class VotoSchedulerTest {
 
     @InjectMocks
     private VotoScheduler votoScheduler;
-
-    @BeforeEach
-    public void setUp() {
-    }
 
     @Test
     void testContabilizarVoto() {

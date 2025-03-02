@@ -1,9 +1,7 @@
 package com.siscred.cooperativa.infrastructure.gateways.kafka.producer;
 
 import com.siscred.cooperativa.application.gateways.ContabilizarVotoMensageriaGateway;
-import com.siscred.cooperativa.application.gateways.VotoMensageriaGateway;
 import com.siscred.cooperativa.domain.TotalVotoDomain;
-import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.TipoOprecaoEnum;
 import com.siscred.cooperativa.infrastructure.gateways.kafka.dto.VotoKafkaDTO;
 import lombok.extern.slf4j.Slf4j;

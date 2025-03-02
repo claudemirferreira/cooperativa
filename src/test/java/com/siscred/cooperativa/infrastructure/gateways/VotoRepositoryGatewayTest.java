@@ -76,7 +76,6 @@ class VotoRepositoryGatewayTest {
         assertEquals(votoDomain.getSessao().getId(), result.get(0).getSessao().getId());
         assertEquals(votoDomain.getVoto(), result.get(0).getVoto());
 
-        // Verifica se o método findAll foi chamado uma vez
         verify(votoRepository, times(1)).findAll(any(Specification.class));
     }
 
