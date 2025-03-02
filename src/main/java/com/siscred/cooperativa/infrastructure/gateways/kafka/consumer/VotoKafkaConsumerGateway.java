@@ -1,4 +1,4 @@
-package com.siscred.cooperativa.infrastructure.gateways;
+package com.siscred.cooperativa.infrastructure.gateways.kafka.consumer;
 
 import com.siscred.cooperativa.application.usecases.RegistrarVotoUsecase;
 import com.siscred.cooperativa.domain.VotoDomain;

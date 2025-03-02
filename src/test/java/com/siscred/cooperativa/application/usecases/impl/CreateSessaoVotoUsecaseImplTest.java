@@ -43,7 +43,7 @@ class CreateSessaoVotoUsecaseImplTest {
                 .status(StatusEnum.ABERTO)
                 .build();
 
-        when(sessaoGateway.create(any(SessaoDomain.class))).thenReturn(expectedSessao);
+        when(sessaoGateway.save(any(SessaoDomain.class))).thenReturn(expectedSessao);
 
         SessaoDomain result = createSessaoVotacaoUsecase.execute(pautaId, null);
 
@@ -52,7 +52,7 @@ class CreateSessaoVotoUsecaseImplTest {
         assertEquals(StatusEnum.ABERTO, result.getStatus());
         assertEquals(pautaId, result.getPauta().getId());
 
-        verify(sessaoGateway, times(1)).create(any(SessaoDomain.class));
+        verify(sessaoGateway, times(1)).save(any(SessaoDomain.class));
     }
 
     @Test
@@ -66,7 +66,7 @@ class CreateSessaoVotoUsecaseImplTest {
                 .status(StatusEnum.ABERTO)
                 .build();
 
-        when(sessaoGateway.create(any(SessaoDomain.class))).thenReturn(expectedSessao);
+        when(sessaoGateway.save(any(SessaoDomain.class))).thenReturn(expectedSessao);
 
         SessaoDomain result = createSessaoVotacaoUsecase.execute(pautaId, customMinutes);
 
@@ -75,6 +75,6 @@ class CreateSessaoVotoUsecaseImplTest {
         assertEquals(StatusEnum.ABERTO, result.getStatus());
         assertEquals(pautaId, result.getPauta().getId());
 
-        verify(sessaoGateway, times(1)).create(any(SessaoDomain.class));
+        verify(sessaoGateway, times(1)).save(any(SessaoDomain.class));
     }
 }

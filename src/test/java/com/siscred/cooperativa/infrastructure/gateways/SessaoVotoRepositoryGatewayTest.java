@@ -58,7 +58,7 @@ class SessaoVotoRepositoryGatewayTest {
 
     @Test
     void testCreate() {
-        SessaoDomain result = gateway.create(sessaoDomain);
+        SessaoDomain result = gateway.save(sessaoDomain);
 
         verify(sessaoRepository, times(1)).save(sessaoVotacaoEntity);
 

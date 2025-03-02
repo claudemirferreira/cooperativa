@@ -1,4 +1,4 @@
-package com.siscred.cooperativa.infrastructure.gateways;
+package com.siscred.cooperativa.infrastructure.gateways.kafka.producer;
 
 import com.siscred.cooperativa.application.gateways.VotoMensageriaGateway;
 import com.siscred.cooperativa.domain.VotoDomain;

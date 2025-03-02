@@ -1,6 +1,7 @@
 package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.domain.VotoDomain;
+import com.siscred.cooperativa.infrastructure.gateways.kafka.producer.VotoKafkaProducerGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

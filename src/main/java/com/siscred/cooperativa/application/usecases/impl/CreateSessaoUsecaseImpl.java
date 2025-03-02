@@ -32,7 +32,7 @@ public class CreateSessaoUsecaseImpl implements CreateSessaoUsecase {
                 .status(StatusEnum.ABERTO)
                 .build();
         log.info("{}", sessaoDomain);
-        return sessaoGateway.create(sessaoDomain);
+        return sessaoGateway.save(sessaoDomain);
     }
 
 }

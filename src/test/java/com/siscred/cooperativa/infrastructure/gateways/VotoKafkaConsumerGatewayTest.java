@@ -2,6 +2,7 @@ package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.application.usecases.RegistrarVotoUsecase;
 import com.siscred.cooperativa.domain.VotoDomain;
+import com.siscred.cooperativa.infrastructure.gateways.kafka.consumer.VotoKafkaConsumerGateway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
