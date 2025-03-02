@@ -49,7 +49,7 @@ public class CreateVotoUsecaseImpl implements CreateVotoUsecase {
     }
 
     private void existSessaoAberta(Long sessaoId) {
-        if (!sessaoGateway.existSessaoAberta(sessaoId)) {
+        if (!Boolean.TRUE.equals(sessaoGateway.existSessaoAberta(sessaoId))) {
             throw new NotExistSessaoAbertaException("Não existe sessão aberta para o id " + sessaoId);
         }
     }

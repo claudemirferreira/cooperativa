@@ -3,7 +3,7 @@ package com.siscred.cooperativa.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

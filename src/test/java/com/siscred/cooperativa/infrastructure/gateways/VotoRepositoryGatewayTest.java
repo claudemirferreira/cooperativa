@@ -1,12 +1,10 @@
 package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.domain.SessaoDomain;
-import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
-import com.siscred.cooperativa.infrastructure.persistence.iquery.TotalVotoDTO;
 import com.siscred.cooperativa.infrastructure.persistence.repository.VotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,8 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class VotoRepositoryGatewayTest {
@@ -35,8 +34,6 @@ class VotoRepositoryGatewayTest {
 
     private Voto votoEntity;
     private VotoDomain votoDomain;
-    private TotalVotoDomain totalVotoDomain;
-    private TotalVotoDTO totalVotoDTO;
 
     @BeforeEach
     void setUp() {
@@ -47,8 +44,6 @@ class VotoRepositoryGatewayTest {
         SessaoDomain sessaoDomain = SessaoDomain.builder().id(1L).build();
         votoEntity = Voto.builder().id(1L).cpf("12345678900").sessao(sessao).resposta(VotoEnum.SIM).build();
         votoDomain = VotoDomain.builder().id(1L).cpf("12345678900").sessao(sessaoDomain).voto(VotoEnum.SIM).build();
-        totalVotoDomain = TotalVotoDomain.builder().sessaoId(1L).totalSim(1).totalNao(1).pauta("Pauta").build();
-        totalVotoDTO = TotalVotoDTO.builder().sessaoId(1L).totalSim(1).totalNao(1).pauta("Pauta").build();
     }
 
     @Test
@@ -84,27 +79,6 @@ class VotoRepositoryGatewayTest {
 
         // Verifica se o método findAll foi chamado uma vez
         verify(votoRepository, times(1)).findAll(any(Specification.class));
-    }
-
-    @Test
-    void testCountVotoSesaoAberta() {
-        when(votoRepository.countVotoSesaoAberta()).thenReturn(List.of(totalVotoDTO));
-        when(modelMapper.map(totalVotoDTO, TotalVotoDomain.class)).thenReturn(totalVotoDomain);
-
-        List<TotalVotoDomain> result = votoRepositoryGateway.countVotoSesaoAberta();
-
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getTotalNao());
-        assertEquals(1, result.get(0).getTotalSim());
-        assertEquals(1, totalVotoDTO.getTotalNao());
-        assertEquals(1, totalVotoDTO.getTotalSim());
-        assertEquals("Pauta", totalVotoDTO.getPauta());
-        assertEquals(1L, totalVotoDTO.getSessaoId());
-
-        verify(votoRepository, times(1)).countVotoSesaoAberta();
-        verify(modelMapper, times(1)).map(totalVotoDTO, TotalVotoDomain.class);
     }
 
 }

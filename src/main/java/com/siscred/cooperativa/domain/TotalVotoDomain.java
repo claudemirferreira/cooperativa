@@ -2,11 +2,13 @@ package com.siscred.cooperativa.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class TotalVotoDomain {
     private Long sessaoId;
     private String pauta;

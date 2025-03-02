@@ -5,7 +5,6 @@ import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.exception.ExistVotoCPFException;
 import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
-import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +27,6 @@ class RegistrarVotoUsecaseImplTest {
     private RegistrarVotoUsecaseImpl registrarVotoUsecase;
 
     private VotoDomain votoDomain;
-    private Voto voto;
-
 
     @BeforeEach
     void setUp() {
@@ -41,10 +38,6 @@ class RegistrarVotoUsecaseImplTest {
                 .cpf("52998224725")
                 .build();
 
-        voto = Voto.builder()
-                .id(1L)
-                .cpf("52998224725")
-                .build();
     }
 
     @Test
@@ -93,7 +86,7 @@ class RegistrarVotoUsecaseImplTest {
 
         // Esperando que a exceção seja lançada
         ExistVotoCPFException exception = assertThrows(ExistVotoCPFException.class, () ->
-            registrarVotoUsecase.execute(votoDomain)
+                registrarVotoUsecase.execute(votoDomain)
         );
 
         // Verificando se a mensagem da exceção é a esperada
@@ -119,7 +112,7 @@ class RegistrarVotoUsecaseImplTest {
 
         // Esperando que o erro seja registrado corretamente
         RuntimeException exception = assertThrows(RuntimeException.class, () ->
-            registrarVotoUsecase.execute(votoDomain)
+                registrarVotoUsecase.execute(votoDomain)
         );
 
         // Verificando se a mensagem da exceção é a esperada

@@ -31,7 +31,6 @@ public class ContabilizarVotoUsecaseImpl implements ContabilizarVotoUsecase {
         listaTotalVoto.forEach(item -> {
             log.info("{}", item);
             this.fecharSessao(item.getSessaoId());
-
         });
     }
 

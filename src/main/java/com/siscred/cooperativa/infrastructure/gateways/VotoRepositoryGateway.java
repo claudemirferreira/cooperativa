@@ -5,6 +5,8 @@ import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
+import com.siscred.cooperativa.infrastructure.persistence.iquery.ITotalVoto;
+import com.siscred.cooperativa.infrastructure.persistence.iquery.TotalVotoDTO;
 import com.siscred.cooperativa.infrastructure.persistence.repository.VotoRepository;
 import com.siscred.cooperativa.infrastructure.persistence.specification.VotoSpecification;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -51,9 +54,28 @@ public class VotoRepositoryGateway implements VotoGateway {
     @Override
     public List<TotalVotoDomain> countVotoSesaoAberta() {
         log.info("call countVotoSesaoAberta");
-        return votoRepository.countVotoSesaoAberta().stream()
+
+        List<ITotalVoto> lista = votoRepository.countVotoSesaoAberta();
+        List<TotalVotoDTO> listaDTO = toDTO(lista);
+        return listaDTO.stream()
                 .map(voto -> modelMapper.map(voto, TotalVotoDomain.class))
                 .toList();
+    }
+
+    private TotalVotoDTO toDTO(ITotalVoto iTotalVoto) {
+        return TotalVotoDTO
+                .builder()
+                .pauta(iTotalVoto.getPauta())
+                .sessaoId(iTotalVoto.getSessaoId())
+                .totalNao(iTotalVoto.getTotalNao())
+                .totalSim(iTotalVoto.getTotalSim())
+                .build();
+    }
+
+    private List<TotalVotoDTO> toDTO(List<ITotalVoto> lista) {
+        List<TotalVotoDTO> listaDTO = new ArrayList<>();
+        lista.forEach(item -> listaDTO.add(toDTO(item)));
+        return listaDTO;
     }
 
 }

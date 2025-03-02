@@ -3,6 +3,7 @@ package com.siscred.cooperativa.infrastructure.gateways;
 import com.siscred.cooperativa.application.gateways.SessaoGateway;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
+import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
 import com.siscred.cooperativa.infrastructure.persistence.specification.SessaoSpecification;
@@ -25,7 +26,7 @@ public class SessaoRepositoryGateway implements SessaoGateway {
 
     @Override
     public SessaoDomain save(SessaoDomain sessaoDomain) {
-        Sessao entity = modelMapper.map(sessaoDomain, Sessao.class);
+        Sessao entity = mapper(sessaoDomain);
         sessaoRepository.save(entity);
         return modelMapper.map(entity, SessaoDomain.class);
     }
@@ -41,6 +42,12 @@ public class SessaoRepositoryGateway implements SessaoGateway {
     public Boolean existSessaoAberta(Long sessaoId) {
         Specification<Sessao> spec = SessaoSpecification.filterBySessaoIdAndStatus(sessaoId, StatusEnum.ABERTO);
         return sessaoRepository.findOne(spec).map(sessao -> modelMapper.map(sessao, SessaoDomain.class)).isPresent();
+    }
+
+    private Sessao mapper(SessaoDomain sessaoDomain) {
+        Sessao entity = modelMapper.map(sessaoDomain, Sessao.class);
+        entity.setPauta( Pauta.builder().id(sessaoDomain.getPauta().getId()).build());
+        return entity;
     }
 
 }

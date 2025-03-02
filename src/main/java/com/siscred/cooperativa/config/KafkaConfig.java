@@ -1,6 +1,6 @@
 package com.siscred.cooperativa.config;
 
-import com.siscred.cooperativa.domain.VotoDomain;
+import com.siscred.cooperativa.infrastructure.gateways.kafka.dto.VotoKafkaDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class KafkaConfig {
 
     @Bean
-    public ConsumerFactory<String, VotoDomain> votoConsumerFactory() {
+    public ConsumerFactory<String, VotoKafkaDTO> votoConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "my-group");
@@ -32,8 +32,8 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, VotoDomain> votoKafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, VotoDomain> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, VotoKafkaDTO> votoKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, VotoKafkaDTO> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(votoConsumerFactory());
         return factory;
