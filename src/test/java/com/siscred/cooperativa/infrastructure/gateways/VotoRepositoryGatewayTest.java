@@ -66,7 +66,7 @@ class VotoRepositoryGatewayTest {
     @Test
     void findBySessaoIdAndCpf_ShouldReturnVotoDomainList() {
         // Simula a resposta do repositório
-        when(votoRepository.findAll(any(Specification.class))).thenReturn(Arrays.asList(votoEntity));
+        when(votoRepository.findAll(any(Specification.class))).thenReturn(List.of(votoEntity));
         when(modelMapper.map(votoEntity, VotoDomain.class)).thenReturn(votoDomain);
 
         List<VotoDomain> result = votoRepositoryGateway.findBySessaoIdAndCpf(1L, "12345678900");

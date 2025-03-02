@@ -86,9 +86,9 @@ class SessaoRepositoryGatewayTest {
         when(sessaoRepository.findById(999L)).thenReturn(java.util.Optional.empty());
 
         // Act & Assert
-        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
-            sessaoRepositoryGateway.findById(999L);
-        });
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () ->
+            sessaoRepositoryGateway.findById(999L)
+        );
         assertEquals("Sessão com ID 999 não encontrada", thrown.getMessage());
     }
 
