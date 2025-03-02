@@ -1,7 +1,8 @@
-package com.siscred.cooperativa.application.usecases.impl;
+package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.application.gateways.SessaoGateway;
 import com.siscred.cooperativa.application.gateways.VotoGateway;
+import com.siscred.cooperativa.application.usecases.impl.ContabilizarVotoUsecaseImpl;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
@@ -34,26 +35,27 @@ class ContabilizarVotoUsecaseImplTest {
 
     @Test
     void testExecute() {
-        // Arrange: Criação de objetos de teste
+        // Arrange
         TotalVotoDomain totalVotoDomain = createTotalVotoDomain(1L, "Pauta de Exemplo", 10, 5);
         
-        // Simulando o retorno do countVotoSesaoAberta()
+        // Mock de countVotoSesaoAberta()
         when(votoGateway.countVotoSesaoAberta()).thenReturn(List.of(totalVotoDomain));
 
-        // Simulando o retorno de findById() para a sessão
+        // Mock de findById() para a SessaoDomain
         SessaoDomain sessaoDomain = createSessaoDomain(1L, StatusEnum.ABERTO);
         when(sessaoGateway.findById(1L)).thenReturn(sessaoDomain);
 
+        // Act
         contabilizarVotoUsecase.execute();
 
-        // Assert: Verificações de interações e alterações esperadas
-
+        // Assert
         // Verifica se o status da sessão foi alterado para FECHADO
         verify(sessaoGateway, times(1)).save(sessaoDomain);
         assertEquals(StatusEnum.FECHADO, sessaoDomain.getStatus(), "O status da sessão não foi alterado para FECHADO");
 
         verify(contabilizarVotoKafkaProducerGateway, times(1)).send(totalVotoDomain);
 
+        // Verifica se countVotoSesaoAberta() foi chamado
         verify(votoGateway, times(1)).countVotoSesaoAberta();
     }
 

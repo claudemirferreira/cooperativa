@@ -40,8 +40,11 @@ class VotoKafkaProducerGatewayTest {
     void testSend() {
         // Arrange
         VotoDomain votoDomain = new VotoDomain(); // Mock do VotoDomain
-        VotoKafkaDTO expectedMessage = new VotoKafkaDTO(TipoOprecaoEnum.REGISTRA_VOTO, votoDomain);
-
+        VotoKafkaDTO expectedMessage = VotoKafkaDTO
+                .builder()
+                .tipoOprecao(TipoOprecaoEnum.REGISTRA_VOTO)
+                .votoDomain(votoDomain)
+                .build();
         // Act
         votoKafkaProducerGateway.send(votoDomain);
 

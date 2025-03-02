@@ -1,6 +1,8 @@
 package com.siscred.cooperativa.infrastructure.gateways.kafka.producer;
 
+import com.siscred.cooperativa.application.gateways.ContabilizarVotoMensageriaGateway;
 import com.siscred.cooperativa.application.gateways.VotoMensageriaGateway;
+import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.TipoOprecaoEnum;
 import com.siscred.cooperativa.infrastructure.gateways.kafka.dto.VotoKafkaDTO;
@@ -11,26 +13,26 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class VotoKafkaProducerGateway implements VotoMensageriaGateway {
+public class ContabilizarVotoKafkaProducerGateway implements ContabilizarVotoMensageriaGateway {
 
     private final KafkaTemplate<String, VotoKafkaDTO> kafkaTemplate;
 
     private final String topic;
 
-    public VotoKafkaProducerGateway(KafkaTemplate<String, VotoKafkaDTO> kafkaTemplate,
-                                    @Value("${kafka.topic}") String topic) {
+    public ContabilizarVotoKafkaProducerGateway(KafkaTemplate<String, VotoKafkaDTO> kafkaTemplate,
+                                                @Value("${kafka.topic}") String topic) {
         this.kafkaTemplate = kafkaTemplate;
         this.topic = topic;
     }
 
     @Override
-    public void send(VotoDomain votoDomain) {
+    public void send(TotalVotoDomain totalVotoDomain) {
+        log.info("call send {} payload {}", topic, totalVotoDomain);
         VotoKafkaDTO votoKafkaDTO = VotoKafkaDTO
                 .builder()
-                .tipoOprecao(TipoOprecaoEnum.REGISTRA_VOTO)
-                .votoDomain(votoDomain)
+                .tipoOprecao(TipoOprecaoEnum.CONTABILIZAR_VOTO)
+                .totalVotoDomain(totalVotoDomain)
                 .build();
-        log.info("publish {} payload {}", topic, votoKafkaDTO);
         kafkaTemplate.send(topic, votoKafkaDTO);
     }
 }

@@ -6,6 +6,7 @@ import com.siscred.cooperativa.application.usecases.ContabilizarVotoUsecase;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
+import com.siscred.cooperativa.infrastructure.gateways.kafka.producer.ContabilizarVotoKafkaProducerGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +19,25 @@ public class ContabilizarVotoUsecaseImpl implements ContabilizarVotoUsecase {
 
     private final VotoGateway votoGateway;
     private final SessaoGateway sessaoGateway;
+    private final ContabilizarVotoKafkaProducerGateway contabilizarVotoKafkaProducerGateway;
 
     @Autowired
-    public ContabilizarVotoUsecaseImpl(VotoGateway votoGateway, SessaoGateway sessaoGateway) {
+    public ContabilizarVotoUsecaseImpl(
+            VotoGateway votoGateway,
+            SessaoGateway sessaoGateway,
+            ContabilizarVotoKafkaProducerGateway contabilizarVotoKafkaProducerGateway) {
         this.votoGateway = votoGateway;
         this.sessaoGateway = sessaoGateway;
+        this.contabilizarVotoKafkaProducerGateway = contabilizarVotoKafkaProducerGateway;
     }
 
     @Override
     public void execute() {
         List<TotalVotoDomain> listaTotalVoto = this.votoGateway.countVotoSesaoAberta();
-        listaTotalVoto.forEach(item -> {
-            log.info("{}", item);
-            this.fecharSessao(item.getSessaoId());
+        listaTotalVoto.forEach(totalVotoDomain -> {
+            log.info("{}", totalVotoDomain);
+            this.fecharSessao(totalVotoDomain.getSessaoId());
+            contabilizarVotoKafkaProducerGateway.send(totalVotoDomain);
         });
     }
 

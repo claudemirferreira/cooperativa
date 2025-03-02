@@ -35,8 +35,11 @@ class VotoKafkaConsumerGatewayTest {
         VotoDomain votoDomain = new VotoDomain();
         votoDomain.setCpf("12345678900");
 
-        VotoKafkaDTO votoKafkaDTO = new VotoKafkaDTO(TipoOprecaoEnum.REGISTRA_VOTO, votoDomain);
-
+        VotoKafkaDTO votoKafkaDTO = VotoKafkaDTO
+                .builder()
+                .tipoOprecao(TipoOprecaoEnum.REGISTRA_VOTO)
+                .votoDomain(votoDomain)
+                .build();
         // Chama o método listen diretamente
         votoKafkaConsumerGateway.listen(votoKafkaDTO);
 
