@@ -1,7 +1,7 @@
 package com.siscred.cooperativa.infrastructure.persistence.repository;
 
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
-import com.siscred.cooperativa.infrastructure.persistence.iquery.TotalVoto;
+import com.siscred.cooperativa.infrastructure.persistence.iquery.TotalVotoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +25,5 @@ public interface VotoRepository extends JpaRepository<Voto, Long>, JpaSpecificat
                 GROUP BY p.nome, s.sessao_id
                 ORDER BY p.nome DESC
             """, nativeQuery = true)
-    List<TotalVoto> countVotoSesaoAberta();
+    List<TotalVotoDTO> countVotoSesaoAberta();
 }

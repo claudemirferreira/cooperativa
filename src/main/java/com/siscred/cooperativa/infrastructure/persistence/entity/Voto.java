@@ -12,6 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(
+        name = "voto",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "unique_sessao_cpf", columnNames = {"sessao_id", "cpf"})
+        }
+)
 public class Voto {
 
     @Id

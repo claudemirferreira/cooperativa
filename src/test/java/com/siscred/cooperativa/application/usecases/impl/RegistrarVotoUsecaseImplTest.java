@@ -89,7 +89,7 @@ class RegistrarVotoUsecaseImplTest {
                 .build();
 
         // Simulando o comportamento do gateway com CPF já existente
-        when(votoGateway.findBySessaoIdAndCpf(1L, "52998224725")).thenReturn(List.of(voto));
+        when(votoGateway.findBySessaoIdAndCpf(1L, "52998224725")).thenReturn(List.of(votoDomain));
 
         // Esperando que a exceção seja lançada
         ExistVotoCPFException exception = assertThrows(ExistVotoCPFException.class, () -> {

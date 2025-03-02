@@ -1,6 +1,6 @@
 package com.siscred.cooperativa.infrastructure.persistence.iquery;
 
-public interface TotalVoto {
+public interface ITotalVoto {
     Integer getTotalSim();
     Integer getTotalNao();
     String getPauta();

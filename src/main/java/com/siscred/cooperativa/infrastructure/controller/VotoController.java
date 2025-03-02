@@ -31,13 +31,7 @@ public class VotoController {
     public ResponseEntity<CreateVotoResponse> create(@Valid @RequestBody final CreateVotoRequest request) throws CpfInvalidException {
         final var domain = createVotoUsecase.execute(request.cpf(), request.sessaoId(), request.voto());
         return ResponseEntity.created(URI.create("/voto/" + domain.getCpf())).body(
-                CreateVotoResponse
-                        .builder()
-                        .cpf(domain.getCpf())
-                        .voto(domain.getVoto())
-                        .sessaoId(domain.getSessao().getId())
-                        .build()
-        );
+                new CreateVotoResponse(domain.getCpf(), domain.getSessao().getId(), domain.getVoto()));
     }
 
 }

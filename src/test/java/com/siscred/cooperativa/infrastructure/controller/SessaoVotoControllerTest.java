@@ -4,6 +4,7 @@ import com.siscred.cooperativa.application.usecases.CreateSessaoUsecase;
 import com.siscred.cooperativa.domain.PautaDomain;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.controller.dto.response.CreateSessaoVotacaoResponse;
+import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,13 +41,13 @@ class SessaoVotoControllerTest {
                 .id(1L)
                 .pauta( PautaDomain.builder().id(100L).build() )
                 .build();
-
-        createSessaoVotacaoResponse = CreateSessaoVotacaoResponse.builder()
-                .id(sessaoDomain.getId())
-                .pauta(sessaoDomain.getPauta())
-                .fim(sessaoDomain.getFim())
-                .inicio(sessaoDomain.getInicio())
-                .build();
+        createSessaoVotacaoResponse = new CreateSessaoVotacaoResponse(
+                sessaoDomain.getId(),
+                sessaoDomain.getInicio(),
+                sessaoDomain.getFim(),
+                sessaoDomain.getPauta(),
+                sessaoDomain.getStatus()
+        );
     }
 
     @Test
@@ -61,7 +63,11 @@ class SessaoVotoControllerTest {
         assertEquals(201, response.getStatusCodeValue());
         assertEquals(URI.create("/sessao-votacao/" + sessaoDomain.getId()), response.getHeaders().getLocation());
         assertNotNull(response.getBody());
-        assertEquals(sessaoDomain.getId(), response.getBody().getId());
+        assertEquals(sessaoDomain.getId(), response.getBody().id());
+        assertEquals(sessaoDomain.getInicio(), response.getBody().inicio());
+        assertEquals(sessaoDomain.getFim(), response.getBody().fim());
+        assertEquals(sessaoDomain.getPauta(), response.getBody().pauta());
+        assertEquals(sessaoDomain.getStatus(), response.getBody().status());
     }
 
     @Test
@@ -76,12 +82,13 @@ class SessaoVotoControllerTest {
                 .inicio(sessaoDomain.getInicio())
                 .build();
 
-        CreateSessaoVotacaoResponse responsePersonalizada = CreateSessaoVotacaoResponse.builder()
-                .id(sessaoPersonalizada.getId())
-                .pauta( PautaDomain.builder().id(100L).build() )
-                .fim(sessaoDomain.getFim())
-                .inicio(sessaoDomain.getInicio())
-                .build();
+        CreateSessaoVotacaoResponse responsePersonalizada = new CreateSessaoVotacaoResponse(
+                sessaoPersonalizada.getId(),
+                sessaoPersonalizada.getInicio(),
+                sessaoPersonalizada.getFim(),
+                sessaoPersonalizada.getPauta(),
+                sessaoPersonalizada.getStatus()
+        );
 
         when(createSessaoUsecase.execute(pautaId, minutos)).thenReturn(sessaoPersonalizada);
         when(modelMapper.map(sessaoPersonalizada, CreateSessaoVotacaoResponse.class)).thenReturn(responsePersonalizada);
@@ -91,6 +98,10 @@ class SessaoVotoControllerTest {
         assertEquals(201, response.getStatusCodeValue());
         assertEquals(URI.create("/sessao-votacao/" + sessaoPersonalizada.getId()), response.getHeaders().getLocation());
         assertNotNull(response.getBody());
-        assertEquals(sessaoPersonalizada.getId(), response.getBody().getId());
+        assertEquals(sessaoPersonalizada.getId(), response.getBody().id());
+        assertEquals(sessaoPersonalizada.getInicio(), response.getBody().inicio());
+        assertEquals(sessaoPersonalizada.getFim(), response.getBody().fim());
+        assertEquals(sessaoPersonalizada.getPauta(), response.getBody().pauta());
+        assertEquals(sessaoPersonalizada.getStatus(), response.getBody().status());
     }
 }

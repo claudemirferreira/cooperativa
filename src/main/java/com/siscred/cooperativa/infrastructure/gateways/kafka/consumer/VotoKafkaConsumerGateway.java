@@ -17,9 +17,10 @@ public class VotoKafkaConsumerGateway {
     }
 
     @KafkaListener(topics = "${kafka.topic}", groupId = "voto-group", containerFactory = "votoKafkaListenerContainerFactory")
-    public void listen(VotoDomain votoCreatedEvent) {
-        log.info("processed payload {}", votoCreatedEvent);
-        registrarVotoUsecase.execute(votoCreatedEvent);
+    public void listen(VotoDomain votoDomain) {
+        log.info("######################################################");
+        log.info("processed payload {}", votoDomain);
+        registrarVotoUsecase.execute(votoDomain);
     }
 
 }

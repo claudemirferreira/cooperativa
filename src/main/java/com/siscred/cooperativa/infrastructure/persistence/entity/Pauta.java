@@ -1,14 +1,9 @@
 package com.siscred.cooperativa.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.List;
-
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,9 +17,5 @@ public class Pauta {
 
     @Column(length = 100, nullable = false, unique = true)
     private String nome;
-
-    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Sessao> sessaoVotacoes;
-
 
 }

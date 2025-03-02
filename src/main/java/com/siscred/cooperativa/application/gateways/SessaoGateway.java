@@ -6,4 +6,6 @@ public interface SessaoGateway {
     SessaoDomain save(SessaoDomain sessaoDomain);
 
     SessaoDomain findById(Long id);
+
+    Boolean existSessaoAberta(Long sessaoId);
 }
