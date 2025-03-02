@@ -45,7 +45,7 @@ class VotoRepositoryGatewayTest {
         // Setup de dados simulados
         Sessao sessao = Sessao.builder().id(1L).build();
         SessaoDomain sessaoDomain = SessaoDomain.builder().id(1L).build();
-        votoEntity = Voto.builder().id(1L).cpf("12345678900").sessao(sessao).voto(VotoEnum.SIM).build();
+        votoEntity = Voto.builder().id(1L).cpf("12345678900").sessao(sessao).resposta(VotoEnum.SIM).build();
         votoDomain = VotoDomain.builder().id(1L).cpf("12345678900").sessao(sessaoDomain).voto(VotoEnum.SIM).build();
         totalVotoDomain = TotalVotoDomain.builder().sessaoId(1L).totalSim(1).totalNao(1).pauta("Pauta").build();
         totalVotoDTO = TotalVotoDTO.builder().sessaoId(1L).totalSim(1).totalNao(1).pauta("Pauta").build();

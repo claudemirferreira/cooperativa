@@ -4,7 +4,6 @@ import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
-import com.siscred.cooperativa.infrastructure.persistence.specification.SessaoSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,9 +82,9 @@ class SessaoRepositoryGatewayTest {
         // Simula o comportamento de EntityNotFoundException
         when(sessaoRepository.findById(2L)).thenReturn(java.util.Optional.empty());
 
-        Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            sessaoRepositoryGateway.findById(2L);
-        });
+        Exception exception = assertThrows(EntityNotFoundException.class, () ->
+            sessaoRepositoryGateway.findById(2L)
+        );
 
         assertEquals("Sessão com ID 2 não encontrada", exception.getMessage());
         verify(sessaoRepository, times(1)).findById(2L);

@@ -92,9 +92,9 @@ class RegistrarVotoUsecaseImplTest {
         when(votoGateway.findBySessaoIdAndCpf(1L, "52998224725")).thenReturn(List.of(votoDomain));
 
         // Esperando que a exceção seja lançada
-        ExistVotoCPFException exception = assertThrows(ExistVotoCPFException.class, () -> {
-            registrarVotoUsecase.execute(votoDomain);
-        });
+        ExistVotoCPFException exception = assertThrows(ExistVotoCPFException.class, () ->
+            registrarVotoUsecase.execute(votoDomain)
+        );
 
         // Verificando se a mensagem da exceção é a esperada
         assertEquals("Já existe um voto para o CPF informado.", exception.getMessage());
@@ -118,9 +118,9 @@ class RegistrarVotoUsecaseImplTest {
         when(votoGateway.create(any(VotoDomain.class))).thenThrow(new RuntimeException("Database error"));
 
         // Esperando que o erro seja registrado corretamente
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            registrarVotoUsecase.execute(votoDomain);
-        });
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+            registrarVotoUsecase.execute(votoDomain)
+        );
 
         // Verificando se a mensagem da exceção é a esperada
         assertEquals("Database error", exception.getMessage());

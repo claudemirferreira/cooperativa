@@ -4,7 +4,6 @@ import com.siscred.cooperativa.application.usecases.CreateSessaoUsecase;
 import com.siscred.cooperativa.domain.PautaDomain;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.controller.dto.response.CreateSessaoVotacaoResponse;
-import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
-import java.time.OffsetDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SessaoVotoControllerTest {
@@ -39,7 +38,7 @@ class SessaoVotoControllerTest {
     void setUp() {
         sessaoDomain = SessaoDomain.builder()
                 .id(1L)
-                .pauta( PautaDomain.builder().id(100L).build() )
+                .pauta(PautaDomain.builder().id(100L).build())
                 .build();
         createSessaoVotacaoResponse = new CreateSessaoVotacaoResponse(
                 sessaoDomain.getId(),
@@ -77,7 +76,7 @@ class SessaoVotoControllerTest {
 
         SessaoDomain sessaoPersonalizada = SessaoDomain.builder()
                 .id(2L)
-                .pauta( PautaDomain.builder().id(100L).build() )
+                .pauta(PautaDomain.builder().id(100L).build())
                 .fim(sessaoDomain.getFim())
                 .inicio(sessaoDomain.getInicio())
                 .build();

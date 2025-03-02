@@ -1,6 +1,5 @@
 package com.siscred.cooperativa.infrastructure.persistence.specification;
 
-import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
 import jakarta.persistence.criteria.*;
 import org.junit.jupiter.api.BeforeEach;

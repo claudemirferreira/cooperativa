@@ -34,6 +34,6 @@ public class Voto {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 3)
-    private VotoEnum voto;
+    private VotoEnum resposta;
 
 }

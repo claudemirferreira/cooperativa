@@ -32,7 +32,7 @@ public class VotoRepositoryGateway implements VotoGateway {
                 .builder()
                 .cpf(votoDomain.getCpf())
                 .sessao(Sessao.builder().id(votoDomain.getSessao().getId()).build())
-                .voto(votoDomain.getVoto())
+                .resposta(votoDomain.getVoto())
                 .build();
         log.info("{}", voto);
         voto = votoRepository.save(voto);
