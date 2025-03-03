@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/voto")
+@RequestMapping(value = "/voto/v1")
 public class VotoController {
 
     private final CreateVotoUsecase createVotoUsecase;

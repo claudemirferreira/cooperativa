@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/pauta")
+@RequestMapping(value = "/pauta/v1")
 public class PautaController {
 
     private final CreatePautaUsecase createPautaUsecase;

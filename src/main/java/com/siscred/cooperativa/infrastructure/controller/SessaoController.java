@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/sessao")
+@RequestMapping(value = "/sessao/v1")
 public class SessaoController {
 
     private final CreateSessaoUsecase createSessaoUsecase;
