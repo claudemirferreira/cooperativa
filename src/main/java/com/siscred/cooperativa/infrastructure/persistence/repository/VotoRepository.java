@@ -14,8 +14,8 @@ public interface VotoRepository extends JpaRepository<Voto, Long>, JpaSpecificat
                 SELECT
                     p.nome AS pauta,
                     s.sessao_id AS sessaoId,
-                    COALESCE(SUM(CASE WHEN v.voto = 'SIM' THEN 1 ELSE 0 END), 0) AS totalSim,
-                    COALESCE(SUM(CASE WHEN v.voto = 'NÃO' THEN 1 ELSE 0 END), 0) AS totalNao
+                    COALESCE(SUM(CASE WHEN v.resposta = 'SIM' THEN 1 ELSE 0 END), 0) AS totalSim,
+                    COALESCE(SUM(CASE WHEN v.resposta = 'NÃO' THEN 1 ELSE 0 END), 0) AS totalNao
                 FROM pauta p
                 LEFT JOIN sessao s ON p.pauta_id = s.pauta_id
                 LEFT JOIN voto v ON s.sessao_id = v.sessao_id

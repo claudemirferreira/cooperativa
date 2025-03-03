@@ -18,7 +18,7 @@ spring:
       ddl-auto: update
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: my-group
       auto-offset-reset: earliest
