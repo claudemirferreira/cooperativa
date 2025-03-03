@@ -60,7 +60,7 @@ class SessaoVotoControllerTest {
         ResponseEntity<CreateSessaoVotacaoResponse> response = sessaoController.create(pautaId, minutos);
 
         assertEquals(201, response.getStatusCode().value());
-        assertEquals(URI.create("/sessao-votacao/" + sessaoDomain.getId()), response.getHeaders().getLocation());
+        assertEquals(URI.create("/sessao/v1" + sessaoDomain.getId()), response.getHeaders().getLocation());
         assertNotNull(response.getBody());
         assertEquals(sessaoDomain.getId(), response.getBody().id());
         assertEquals(sessaoDomain.getInicio(), response.getBody().inicio());
@@ -95,7 +95,7 @@ class SessaoVotoControllerTest {
         ResponseEntity<CreateSessaoVotacaoResponse> response = sessaoController.create(pautaId, minutos);
 
         assertEquals(201, response.getStatusCode().value());
-        assertEquals(URI.create("/sessao-votacao/" + sessaoPersonalizada.getId()), response.getHeaders().getLocation());
+        assertEquals(URI.create("/sessao/v1" + sessaoPersonalizada.getId()), response.getHeaders().getLocation());
         assertNotNull(response.getBody());
         assertEquals(sessaoPersonalizada.getId(), response.getBody().id());
         assertEquals(sessaoPersonalizada.getInicio(), response.getBody().inicio());

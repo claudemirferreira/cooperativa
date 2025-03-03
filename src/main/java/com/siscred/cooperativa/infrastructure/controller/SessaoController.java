@@ -32,7 +32,7 @@ public class SessaoController {
 
         SessaoDomain sessaoDomain = createSessaoUsecase.execute(pautaId, tempoExpiracaoEmMinutos);
 
-        return ResponseEntity.created(URI.create("/sessao-votacao/" + sessaoDomain.getId())).body(
+        return ResponseEntity.created(URI.create("/sessao/v1" + sessaoDomain.getId())).body(
                 modelMapper.map(sessaoDomain, CreateSessaoVotacaoResponse.class)
         );
     }

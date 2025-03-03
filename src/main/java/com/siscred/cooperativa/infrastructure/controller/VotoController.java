@@ -30,7 +30,7 @@ public class VotoController {
     @PostMapping
     public ResponseEntity<CreateVotoResponse> create(@Valid @RequestBody final CreateVotoRequest request) throws CpfInvalidException {
         final var domain = createVotoUsecase.execute(request.cpf(), request.sessaoId(), request.voto());
-        return ResponseEntity.created(URI.create("/voto/" + domain.getCpf())).body(
+        return ResponseEntity.created(URI.create("/voto/v1/" + domain.getCpf())).body(
                 new CreateVotoResponse(domain.getCpf(), domain.getSessao().getId(), domain.getVoto()));
     }
 

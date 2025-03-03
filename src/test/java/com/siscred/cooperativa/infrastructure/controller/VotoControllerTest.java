@@ -50,11 +50,11 @@ class VotoControllerTest {
         when(createVotoUsecase.execute(cpf, sessaoId, voto)).thenReturn(votoDomain);
 
         // Act & Assert
-        mockMvc.perform(post("/voto")
+        mockMvc.perform(post("/voto/v1/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"cpf\": \"12345678900\", \"sessaoId\": 1, \"voto\": \"SIM\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/voto/12345678900"))
+                .andExpect(header().string("Location", "/voto/v1/12345678900"))
                 .andExpect(jsonPath("$.cpf").value(cpf))
                 .andExpect(jsonPath("$.voto").value(voto.toString()))
                 .andExpect(jsonPath("$.sessaoId").value(sessaoId));
