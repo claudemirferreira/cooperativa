@@ -1,5 +1,10 @@
 package com.siscred.cooperativa.infrastructure.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -21,9 +26,15 @@ public class Sessao {
     @Column(name = "sessao_id")
     private Long id;
 
-    private OffsetDateTime inicio;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime inicio;
 
-    private OffsetDateTime fim;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime fim;
 
     @ManyToOne
     @JoinColumn(name = "pauta_id", nullable = false)

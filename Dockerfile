@@ -23,6 +23,14 @@ RUN ./mvnw package -DskipTests
 # Criar uma nova imagem para rodar o aplicativo
 FROM eclipse-temurin:21-jre-alpine
 
+# Definir timezone no ambiente
+ENV TZ=America/Sao_Paulo
+
+# Instalar pacotes de timezone para Alpine Linux
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" > /etc/timezone
+
 # Diretório de trabalho no container
 WORKDIR /app
 
@@ -33,4 +41,4 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
 # Comando para executar o aplicativo
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=America/Sao_Paulo", "-jar", "app.jar"]

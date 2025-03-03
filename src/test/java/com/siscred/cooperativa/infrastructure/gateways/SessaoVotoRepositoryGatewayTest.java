@@ -13,10 +13,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SessaoVotoRepositoryGatewayTest {
 
@@ -36,21 +37,9 @@ class SessaoVotoRepositoryGatewayTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        sessaoDomain = SessaoDomain
-                .builder()
-                .status(StatusEnum.ABERTO)
-                .inicio(OffsetDateTime.now())
-                .fim(OffsetDateTime.now())
-                .pauta(PautaDomain.builder().id(1L).build())
-                .build();
+        sessaoDomain = SessaoDomain.builder().status(StatusEnum.ABERTO).inicio(LocalDateTime.now()).fim(LocalDateTime.now()).pauta(PautaDomain.builder().id(1L).build()).build();
 
-        sessaoVotacaoEntity = Sessao
-                .builder()
-                .pauta(Pauta.builder().id(1L).build())
-                .inicio(OffsetDateTime.now())
-                .fim(OffsetDateTime.now())
-                .status(StatusEnum.ABERTO)
-                .build();
+        sessaoVotacaoEntity = Sessao.builder().pauta(Pauta.builder().id(1L).build()).inicio(LocalDateTime.now()).fim(LocalDateTime.now()).status(StatusEnum.ABERTO).build();
 
         when(modelMapper.map(sessaoDomain, Sessao.class)).thenReturn(sessaoVotacaoEntity);
         when(modelMapper.map(sessaoVotacaoEntity, SessaoDomain.class)).thenReturn(sessaoDomain);

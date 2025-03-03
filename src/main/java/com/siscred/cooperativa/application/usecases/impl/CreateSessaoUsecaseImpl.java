@@ -8,8 +8,7 @@ import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -18,15 +17,13 @@ public class CreateSessaoUsecaseImpl implements CreateSessaoUsecase {
 
     private final SessaoGateway sessaoGateway;
 
-    private static final String TIME_ZONE_SP = "America/Sao_Paulo";
-
     public CreateSessaoUsecaseImpl(SessaoGateway sessaoGateway) {
         this.sessaoGateway = sessaoGateway;
     }
 
     @Override
     public SessaoDomain execute(Long pautaId, Integer tempoExpiracaoEmMinutos) {
-        OffsetDateTime start = OffsetDateTime.now(ZoneId.of(TIME_ZONE_SP));
+        LocalDateTime start = LocalDateTime.now();
         SessaoDomain sessaoDomain = SessaoDomain
                 .builder()
                 .inicio(start)
@@ -34,7 +31,7 @@ public class CreateSessaoUsecaseImpl implements CreateSessaoUsecase {
                 .pauta(PautaDomain.builder().id(pautaId).build())
                 .status(StatusEnum.ABERTO)
                 .build();
-        
+
         log.info("Sessão criada: {}", sessaoDomain);
         return sessaoGateway.save(sessaoDomain);
     }

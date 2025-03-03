@@ -14,7 +14,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/cooperativa
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092  # <- Adicione esta linha!
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
   db:
     image: mysql:8.0
@@ -23,8 +23,13 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: cooperativa
+      TZ: "America/Sao_Paulo"
     ports:
       - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    command: --default-time-zone='America/Sao_Paulo'
+
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -48,3 +53,6 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+volumes:
+  mysql-data:

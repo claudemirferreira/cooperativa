@@ -11,9 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,22 +27,18 @@ class CreateSessaoVotoUsecaseImplTest {
     private SessaoGateway sessaoGateway;
 
     private Long pautaId;
-    private OffsetDateTime start;
+    private LocalDateTime start;
 
     @BeforeEach
     void setUp() {
         pautaId = 1L;
-        start = OffsetDateTime.now();
+        start = LocalDateTime.now();
     }
 
     @Test
     void shouldCreateSessaoVotacaoWithDefaultTime() {
-        SessaoDomain expectedSessao = SessaoDomain.builder()
-                .inicio(start)
-                .fim(start.plusMinutes(1)) // Tempo padrão
-                .pauta(PautaDomain.builder().id(pautaId).build())
-                .status(StatusEnum.ABERTO)
-                .build();
+        SessaoDomain expectedSessao = SessaoDomain.builder().inicio(start).fim(start.plusMinutes(1)) // Tempo padrão
+                .pauta(PautaDomain.builder().id(pautaId).build()).status(StatusEnum.ABERTO).build();
 
         when(sessaoGateway.save(any(SessaoDomain.class))).thenReturn(expectedSessao);
 
@@ -59,12 +56,7 @@ class CreateSessaoVotoUsecaseImplTest {
     void shouldCreateSessaoVotacaoWithCustomTime() {
         int customMinutes = 5;
 
-        SessaoDomain expectedSessao = SessaoDomain.builder()
-                .inicio(start)
-                .fim(start.plusMinutes(customMinutes))
-                .pauta(PautaDomain.builder().id(pautaId).build())
-                .status(StatusEnum.ABERTO)
-                .build();
+        SessaoDomain expectedSessao = SessaoDomain.builder().inicio(start).fim(start.plusMinutes(customMinutes)).pauta(PautaDomain.builder().id(pautaId).build()).status(StatusEnum.ABERTO).build();
 
         when(sessaoGateway.save(any(SessaoDomain.class))).thenReturn(expectedSessao);
 
