@@ -5,6 +5,7 @@ import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
+import com.siscred.cooperativa.infrastructure.persistence.repository.PautaRepository;
 import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
 import com.siscred.cooperativa.infrastructure.persistence.specification.SessaoSpecification;
 import jakarta.persistence.EntityNotFoundException;
@@ -16,11 +17,13 @@ import org.springframework.stereotype.Service;
 public class SessaoRepositoryGateway implements SessaoGateway {
 
     private final SessaoRepository sessaoRepository;
+    private final PautaRepository pautaRepository;
 
     private final ModelMapper modelMapper;
 
-    public SessaoRepositoryGateway(SessaoRepository sessaoRepository, ModelMapper modelMapper) {
+    public SessaoRepositoryGateway(SessaoRepository sessaoRepository, PautaRepository pautaRepository, ModelMapper modelMapper) {
         this.sessaoRepository = sessaoRepository;
+        this.pautaRepository = pautaRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -46,7 +49,9 @@ public class SessaoRepositoryGateway implements SessaoGateway {
 
     private Sessao mapper(SessaoDomain sessaoDomain) {
         Sessao entity = modelMapper.map(sessaoDomain, Sessao.class);
-        entity.setPauta( Pauta.builder().id(sessaoDomain.getPauta().getId()).build());
+        Pauta pauta = pautaRepository.findById(sessaoDomain.getPauta().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Pauta not found with id: " + sessaoDomain.getId()));
+        entity.setPauta( pauta);
         return entity;
     }
 
