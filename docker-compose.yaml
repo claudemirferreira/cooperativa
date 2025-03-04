@@ -15,6 +15,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    networks:
+      - cooperativa-network
 
   db:
     image: mysql:8.0
@@ -28,6 +30,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - cooperativa-network
     command: --default-time-zone='America/Sao_Paulo'
 
     healthcheck:
@@ -40,6 +44,8 @@ services:
     image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - cooperativa-network
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -53,6 +59,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - cooperativa-network
 
 volumes:
   mysql-data:
+
+networks:
+  cooperativa-network:
+    driver: bridge
