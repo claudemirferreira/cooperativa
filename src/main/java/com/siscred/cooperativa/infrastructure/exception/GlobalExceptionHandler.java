@@ -19,13 +19,13 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotExistSessaoAbertaException.class)
-    public ResponseEntity<String> handleNotExistSessaoAbertaException(NotExistSessaoAbertaException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"" + ex.getMessage() + "\"}");
+    public ResponseEntity<Object> handleNotExistSessaoAbertaException(NotExistSessaoAbertaException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CpfInvalidException.class)
-    public ResponseEntity<String> handleCpfInvalidException(CpfInvalidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"" + ex.getMessage() + "\"}");
+    public ResponseEntity<Object> handleCpfInvalidException(CpfInvalidException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExistVotoCPFException.class)
@@ -34,14 +34,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleEntityNotFound(EntityNotFoundException ex) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("timestamp", LocalDateTime.now());
-        response.put("status", HttpStatus.NOT_FOUND.value());
-        response.put("error", "Not Found");
-        response.put("message", ex.getMessage());
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

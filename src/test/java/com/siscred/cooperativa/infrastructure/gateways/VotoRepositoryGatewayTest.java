@@ -1,10 +1,12 @@
 package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.domain.SessaoDomain;
+import com.siscred.cooperativa.domain.TotalVotoDomain;
 import com.siscred.cooperativa.domain.VotoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.VotoEnum;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Voto;
+import com.siscred.cooperativa.infrastructure.persistence.iquery.ITotalVoto;
 import com.siscred.cooperativa.infrastructure.persistence.repository.VotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class VotoRepositoryGatewayTest {
@@ -38,7 +39,6 @@ class VotoRepositoryGatewayTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Setup de dados simulados
         Sessao sessao = Sessao.builder().id(1L).build();
         SessaoDomain sessaoDomain = SessaoDomain.builder().id(1L).build();
         votoEntity = Voto.builder().id(1L).cpf("12345678900").sessao(sessao).resposta(VotoEnum.SIM).build();
@@ -47,7 +47,6 @@ class VotoRepositoryGatewayTest {
 
     @Test
     void create_ShouldSaveAndReturnVotoDomain() {
-        // Simula a conversão do Entity para Domain
         when(votoRepository.save(any(Voto.class))).thenReturn(votoEntity);
         when(modelMapper.map(votoEntity, VotoDomain.class)).thenReturn(votoDomain);
 
@@ -58,13 +57,11 @@ class VotoRepositoryGatewayTest {
         assertEquals(votoDomain.getSessao().getId(), result.getSessao().getId());
         assertEquals(votoDomain.getVoto(), result.getVoto());
 
-        // Verifica se o repositório save foi chamado uma vez
         verify(votoRepository, times(1)).save(any(Voto.class));
     }
 
     @Test
     void findBySessaoIdAndCpf_ShouldReturnVotoDomainList() {
-        // Simula a resposta do repositório
         when(votoRepository.findAll(any(Specification.class))).thenReturn(List.of(votoEntity));
         when(modelMapper.map(votoEntity, VotoDomain.class)).thenReturn(votoDomain);
 
@@ -77,6 +74,27 @@ class VotoRepositoryGatewayTest {
         assertEquals(votoDomain.getVoto(), result.get(0).getVoto());
 
         verify(votoRepository, times(1)).findAll(any(Specification.class));
+    }
+
+    @Test
+    void testCountVotoSesaoAberta() {
+        ITotalVoto iTotalVoto = mock(ITotalVoto.class);
+        when(iTotalVoto.getPauta()).thenReturn("Pauta 1");
+        when(iTotalVoto.getSessaoId()).thenReturn(1L);
+        when(iTotalVoto.getTotalNao()).thenReturn(10);
+        when(iTotalVoto.getTotalSim()).thenReturn(15);
+
+        List<ITotalVoto> totalVotos = List.of(iTotalVoto); // Garante que a lista não é nula
+
+        when(votoRepository.countVotoSesaoAberta()).thenReturn(totalVotos);
+
+        List<TotalVotoDomain> result = votoRepositoryGateway.countVotoSesaoAberta();
+
+        verify(votoRepository).countVotoSesaoAberta();
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
     }
 
 }

@@ -2,8 +2,9 @@ package com.siscred.cooperativa.infrastructure.gateways;
 
 import com.siscred.cooperativa.domain.PautaDomain;
 import com.siscred.cooperativa.domain.SessaoDomain;
-import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
+import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
+import com.siscred.cooperativa.infrastructure.persistence.repository.PautaRepository;
 import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.jpa.domain.Specification;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -22,74 +24,83 @@ class SessaoRepositoryGatewayTest {
     private SessaoRepository sessaoRepository;
 
     @Mock
+    private PautaRepository pautaRepository;
+
+    @Mock
     private ModelMapper modelMapper;
 
     @InjectMocks
     private SessaoRepositoryGateway sessaoRepositoryGateway;
 
     private SessaoDomain sessaoDomain;
+    private Sessao sessaoEntity;
+    private Pauta pauta;
+    private PautaDomain pautaDomain;
 
     @BeforeEach
     void setUp() {
+
         MockitoAnnotations.openMocks(this);
-        sessaoDomain = new SessaoDomain();
-        sessaoDomain.setId(1L);
-        PautaDomain pauta = new PautaDomain();
+        pautaDomain = new PautaDomain();
+        pautaDomain.setId(1L);
+
+        pauta = new Pauta();
         pauta.setId(1L);
-        sessaoDomain.setPauta(pauta);
+
+        sessaoDomain = new SessaoDomain();
+        sessaoDomain.setPauta(pautaDomain);
+
+        sessaoEntity = new Sessao();
+        sessaoEntity.setPauta(pauta);
+
+        when(pautaRepository.findById(1L)).thenReturn(java.util.Optional.of(pauta));
+        when(modelMapper.map(sessaoDomain, Sessao.class)).thenReturn(sessaoEntity);
+        when(sessaoRepository.save(sessaoEntity)).thenReturn(sessaoEntity);
+        when(modelMapper.map(sessaoEntity, SessaoDomain.class)).thenReturn(sessaoDomain);
     }
 
     @Test
     void testSave() {
-        // Arrange
-        Sessao sessaoEntity = new Sessao();
-        sessaoEntity.setId(1L);
-        sessaoEntity.setPauta(new Pauta());
+        SessaoDomain result = sessaoRepositoryGateway.save(sessaoDomain);
 
-        // Configurando o comportamento do ModelMapper
-        when(modelMapper.map(sessaoDomain, Sessao.class)).thenReturn(sessaoEntity);
-        when(sessaoRepository.save(sessaoEntity)).thenReturn(sessaoEntity);
-        when(modelMapper.map(sessaoEntity, SessaoDomain.class)).thenReturn(sessaoDomain);
+        verify(sessaoRepository).save(sessaoEntity);
+        assertNotNull(result);
+        assertEquals(sessaoDomain, result);
 
-        // Act
-        SessaoDomain savedSessao = sessaoRepositoryGateway.save(sessaoDomain);
-
-        // Assert
-        assertNotNull(savedSessao);
-        assertEquals(1L, savedSessao.getId());
-        verify(sessaoRepository, times(1)).save(sessaoEntity);
-        verify(modelMapper, times(1)).map(sessaoDomain, Sessao.class);
-        verify(modelMapper, times(1)).map(sessaoEntity, SessaoDomain.class);
+        verify(pautaRepository).findById(1L);
     }
 
     @Test
     void testFindById_Success() {
-        // Arrange
-        Sessao sessaoEntity = new Sessao();
-        sessaoEntity.setId(1L);
-
         when(sessaoRepository.findById(1L)).thenReturn(java.util.Optional.of(sessaoEntity));
-        when(modelMapper.map(sessaoEntity, SessaoDomain.class)).thenReturn(sessaoDomain);
 
-        // Act
-        SessaoDomain foundSessao = sessaoRepositoryGateway.findById(1L);
+        SessaoDomain result = sessaoRepositoryGateway.findById(1L);
 
-        // Assert
-        assertNotNull(foundSessao);
-        assertEquals(1L, foundSessao.getId());
-        verify(sessaoRepository, times(1)).findById(1L);
+        verify(sessaoRepository).findById(1L);
+
+        assertNotNull(result);
+        assertEquals(sessaoDomain, result);
     }
 
     @Test
     void testFindById_NotFound() {
-        // Arrange
-        when(sessaoRepository.findById(999L)).thenReturn(java.util.Optional.empty());
+        when(sessaoRepository.findById(1L)).thenReturn(java.util.Optional.empty());
 
-        // Act & Assert
-        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () ->
-            sessaoRepositoryGateway.findById(999L)
-        );
-        assertEquals("Sessão com ID 999 não encontrada", thrown.getMessage());
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            sessaoRepositoryGateway.findById(1L);
+        });
+
+        assertEquals("Sessão com ID 1 não encontrada", exception.getMessage());
     }
 
+    @Test
+    void testExistSessaoAberta() {
+        when(sessaoRepository.findOne(any(Specification.class))).thenReturn(java.util.Optional.of(sessaoEntity));
+
+        Boolean result = sessaoRepositoryGateway.existSessaoAberta(1L);
+
+        verify(sessaoRepository).findOne(any(Specification.class));
+
+        assertTrue(result);
+    }
 }

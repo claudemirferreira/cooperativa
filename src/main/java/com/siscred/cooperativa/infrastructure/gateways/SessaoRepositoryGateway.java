@@ -3,7 +3,6 @@ package com.siscred.cooperativa.infrastructure.gateways;
 import com.siscred.cooperativa.application.gateways.SessaoGateway;
 import com.siscred.cooperativa.domain.SessaoDomain;
 import com.siscred.cooperativa.infrastructure.enuns.StatusEnum;
-import com.siscred.cooperativa.infrastructure.persistence.entity.Pauta;
 import com.siscred.cooperativa.infrastructure.persistence.entity.Sessao;
 import com.siscred.cooperativa.infrastructure.persistence.repository.PautaRepository;
 import com.siscred.cooperativa.infrastructure.persistence.repository.SessaoRepository;
@@ -49,9 +48,8 @@ public class SessaoRepositoryGateway implements SessaoGateway {
 
     private Sessao mapper(SessaoDomain sessaoDomain) {
         Sessao entity = modelMapper.map(sessaoDomain, Sessao.class);
-        Pauta pauta = pautaRepository.findById(sessaoDomain.getPauta().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Pauta not found with id: " + sessaoDomain.getId()));
-        entity.setPauta( pauta);
+        entity.setPauta(pautaRepository.findById(sessaoDomain.getPauta().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Pauta not found with id: " + sessaoDomain.getPauta().getId())));
         return entity;
     }
 
