@@ -1,4 +1,4 @@
-package com.siscred.cooperativa.config;
+package com.siscred.cooperativa.infrastructure.config;
 
 import com.siscred.cooperativa.infrastructure.gateways.kafka.dto.VotoKafkaDTO;
 import org.apache.kafka.clients.consumer.ConsumerConfig;

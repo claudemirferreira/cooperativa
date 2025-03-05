@@ -1,4 +1,4 @@
-package com.siscred.cooperativa.config;
+package com.siscred.cooperativa.infrastructure.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
